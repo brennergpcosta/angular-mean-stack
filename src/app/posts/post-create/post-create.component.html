@@ -1,0 +1,15 @@
+<mat-card>
+  <form (submit)="onAddPost(postForm)" #postForm="ngForm">
+    <mat-form-field>
+      <mat-label>Title</mat-label>
+      <input matInput placeholder="Give it a title to your post!" type="text" ngModel name="title" required
+        minlength="5" #title="ngModel">
+      <mat-error *ngIf="title.invalid">Title is too short!</mat-error>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Content</mat-label>
+      <textarea matInput rows="6" ngModel name="content" required></textarea>
+    </mat-form-field>
+    <button mat-raised-button color="primary" type="submit" [disabled]="!postForm.valid">Save Post</button>
+  </form>
+</mat-card>
