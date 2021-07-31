@@ -1,9 +1,20 @@
 const express = require("express");
-
 const app = express();
+const Post = require("./models/post")
+const mongoose = require("mongoose")
+
+//rDP1vbZsWmGZsM3D meanStackAdmin
 
 express.json()
 express.urlencoded()
+
+mongoose.connect('mongodb+srv://meanStackAdmin:rDP1vbZsWmGZsM3D@meanstackcluster.pxcqh.mongodb.net/note-angular?retryWrites=true&w=majority')
+  .then(() => {
+    console.log('Connected to the database')
+  })
+  .catch(() => {
+    console.log('Connection Failed')
+  })
 
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
@@ -19,7 +30,11 @@ app.use((req, res, next) => {
 });
 
 app.post("/api/posts", (req, res, next) => {
-  const post = req.body;
+  const post = new Post({
+    title: req.body.title,
+    content: req.body.content
+  });
+  post.save()
   console.log(post);
   res.status(201).json({
     message: 'Post added successfully'
