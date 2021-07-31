@@ -1,14 +1,14 @@
 const express = require("express");
-const app = express();
 const Post = require("./models/post")
 const mongoose = require("mongoose")
 
+const app = express();
 //rDP1vbZsWmGZsM3D meanStackAdmin
 
-express.json()
-express.urlencoded()
+app.use(express.json())
+app.use(express.urlencoded())
 
-mongoose.connect('mongodb+srv://meanStackAdmin:rDP1vbZsWmGZsM3D@meanstackcluster.pxcqh.mongodb.net/note-angular?retryWrites=true&w=majority')
+mongoose.connect('mongodb+srv://meanStackAdmin:rDP1vbZsWmGZsM3D@meanstackcluster.pxcqh.mongodb.net/myFirstDatabase?retryWrites=true&w=majority')
   .then(() => {
     console.log('Connected to the database')
   })
@@ -16,55 +16,45 @@ mongoose.connect('mongodb+srv://meanStackAdmin:rDP1vbZsWmGZsM3D@meanstackcluster
     console.log('Connection Failed')
   })
 
-app.use((req, res, next) => {
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept"
-  );
-  res.setHeader(
-    "Access-Control-Allow-Methods",
-    "GET, POST, PATCH, DELETE, OPTIONS"
-  );
-  next();
-});
-
-app.post("/api/posts", (req, res, next) => {
-  const post = new Post({
-    title: req.body.title,
-    content: req.body.content
+  app.use((req, res, next) => {
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader(
+      "Access-Control-Allow-Headers",
+      "Origin, X-Requested-With, Content-Type, Accept"
+    );
+    res.setHeader(
+      "Access-Control-Allow-Methods",
+      "GET, POST, PATCH, DELETE, OPTIONS"
+    );
+    next();
   });
-  post.save()
-  console.log(post);
-  res.status(201).json({
-    message: 'Post added successfully'
+
+  app.post("/api/posts", (req, res, next) => {
+    const post = new Post({
+      title: req.body.title,
+      content: req.body.content,
+    });
+    post.save();
+    res.status(201).json({
+      message: "Post added successfully"
+    });
   });
-});
 
-app.get('/api/posts', (req, res, next) => {
-  posts = [
-    {
-      id: "asdfsafd1",
-      title: 'This is the first title',
-      content: 'And this is the first content'
-    },
-    {
-      id: "asdfsafd2",
-      title: 'This is the second title',
-      content: 'And this is the second content'
-    },
-    {
-      id: "asdfsafd3",
-      title: 'This is the third title',
-      content: 'And this is the third content'
-    },
-  ]
+  app.get("/api/posts", (req, res, next) => {
+    Post.find().then(documents => {
+      res.status(200).json({
+        message: "Posts fetched successfully!",
+        posts: documents
+      });
+    });
+  });
 
-  res.status(200).json({
-    message: "All posts fechted successfully",
-    posts: posts
-  })
-})
+  app.delete("/api/posts/:id", (req, res, next) => {
+    Post.deleteOne({ _id: req.params.id }).then(result => {
+      console.log(result);
+      res.status(200).json({ message: "Post deleted!" });
+    });
+  });
 
-module.exports = app
+  module.exports = app;
 
