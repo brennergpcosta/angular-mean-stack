@@ -45,6 +45,7 @@ app.post("/api/posts", (req, res, next) => {
   })
 });
 
+// Get all posts
 app.get("/api/posts", (req, res, next) => {
   Post.find().then(posts => {
     res.status(200).json({
@@ -54,6 +55,7 @@ app.get("/api/posts", (req, res, next) => {
   })
 });
 
+// Get single post
 app.delete("/api/posts/:id", (req, res, next) => {
   Post.deleteOne({_id: req.params.id}).then(result => {
     console.log(result)
