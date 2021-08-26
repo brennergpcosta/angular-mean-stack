@@ -1,14 +1,15 @@
 <mat-card>
-  <form (submit)="onAddPost(postForm)" #postForm="ngForm">
+  <mat-spinner *ngIf="isLoading"></mat-spinner>
+  <form (submit)="onSavePost(postForm)" #postForm="ngForm" *ngIf="!isLoading">
     <mat-form-field>
       <mat-label>Title</mat-label>
-      <input matInput placeholder="Give it a title to your post!" type="text" ngModel name="title" required
+      <input matInput placeholder="Give it a title to your post!" type="text" ngModel name="title" [ngModel]='post?.title' required
         minlength="5" #title="ngModel">
       <mat-error *ngIf="title.invalid">Title is too short!</mat-error>
     </mat-form-field>
     <mat-form-field>
       <mat-label>Content</mat-label>
-      <textarea matInput rows="6" ngModel name="content" required></textarea>
+      <textarea matInput rows="6" ngModel name="content" [ngModel]='post?.content' required></textarea>
     </mat-form-field>
     <button mat-raised-button color="primary" type="submit" [disabled]="!postForm.valid">Save Post</button>
   </form>
